@@ -56,7 +56,11 @@ router.post('/ingest-salary', async (req, res) => {
     res.status(201).json(newSalary);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: 'Validation failed', details: error.issues });
+      const details = error.issues.map(issue => ({
+        field: issue.path.join('.'),
+        message: issue.message
+      }));
+      return res.status(400).json({ error: 'Validation failed', details });
     }
     res.status(500).json({ error: 'Internal server error' });
   }

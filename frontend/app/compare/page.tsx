@@ -78,7 +78,7 @@ function CompareContent() {
   const { salary1, salary2, difference } = data;
 
   const DiffCell = ({ value }: { value: number }) => {
-    if (value === 0) return <td className="px-4 py-4 text-center text-gray-500 font-medium">0</td>;
+    if (value === 0) return <td className="px-4 py-4 text-center text-gray-500 font-medium">₹0.00L</td>;
     const isPositive = value > 0;
     return (
       <td className={`px-4 py-4 text-center font-semibold ${isPositive ? 'text-green-600' : 'text-red-600'}`}>

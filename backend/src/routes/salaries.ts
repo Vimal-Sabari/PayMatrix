@@ -51,7 +51,7 @@ router.get('/salaries', async (req, res) => {
       data: salaries
     });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error', details: String(error) });
   }
 });
 

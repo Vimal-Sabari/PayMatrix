@@ -6,13 +6,15 @@ import { LevelBadge } from './LevelBadge';
 interface SalaryTableProps {
   salaries: Salary[];
   loading: boolean;
+  selectedIds?: string[];
+  onToggleSelect?: (id: string) => void;
 }
 
 function formatINR(value: number): string {
   return '₹' + (value / 100000).toFixed(2) + 'L';
 }
 
-export function SalaryTable({ salaries, loading }: SalaryTableProps) {
+export function SalaryTable({ salaries, loading, selectedIds, onToggleSelect }: SalaryTableProps) {
   if (loading) {
     return (
       <div className="w-full overflow-x-auto border border-gray-200 rounded-lg shadow-sm">
@@ -86,9 +88,22 @@ export function SalaryTable({ salaries, loading }: SalaryTableProps) {
               <td className="px-6 py-4 text-gray-600">{formatINR(s.base_salary)}</td>
               <td className="px-6 py-4 font-semibold text-gray-900">{formatINR(s.total_compensation)}</td>
               <td className="px-6 py-4">
-                <button className="text-sm font-medium text-indigo-600 hover:text-indigo-800" onClick={() => alert('Compare feature coming soon!')}>
-                  Compare
-                </button>
+                {selectedIds && onToggleSelect ? (
+                  <button 
+                    className={`text-sm font-medium px-3 py-1.5 rounded transition-colors ${
+                      selectedIds.includes(s.id) 
+                        ? 'bg-indigo-600 text-white hover:bg-indigo-700' 
+                        : 'bg-white border border-indigo-600 text-indigo-600 hover:bg-indigo-50'
+                    }`}
+                    onClick={() => onToggleSelect(s.id)}
+                  >
+                    {selectedIds.includes(s.id) ? 'Selected' : 'Select'}
+                  </button>
+                ) : (
+                  <button className="text-sm font-medium text-indigo-600 hover:text-indigo-800" onClick={() => alert('Compare feature coming soon!')}>
+                    Compare
+                  </button>
+                )}
               </td>
             </tr>
           ))}

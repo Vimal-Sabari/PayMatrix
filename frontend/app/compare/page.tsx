@@ -98,6 +98,19 @@ function CompareContent() {
           Salary Comparison
         </h1>
 
+        <div className="bg-indigo-50 rounded-lg p-6 border border-indigo-100 mb-8 text-center shadow-sm">
+          <h2 className="text-lg font-bold text-indigo-900 mb-2 uppercase tracking-wide text-sm">Decision Summary</h2>
+          {difference.total_compensation === 0 ? (
+            <p className="text-indigo-800 text-lg font-medium">Both positions offer exactly the same total compensation.</p>
+          ) : (
+            <p className="text-indigo-900 text-xl">
+              <span className="font-bold capitalize">{difference.total_compensation > 0 ? salary1.company : salary2.company}</span> offers 
+              <span className="font-bold text-green-600"> {formatINR(Math.abs(difference.total_compensation))} </span> 
+              more in Total Compensation than <span className="font-bold capitalize">{difference.total_compensation > 0 ? salary2.company : salary1.company}</span>.
+            </p>
+          )}
+        </div>
+
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
           <div className="grid grid-cols-1 md:grid-cols-2 border-b border-gray-200">
             <div className="p-6 border-b md:border-b-0 md:border-r border-gray-200 bg-gray-50/50">

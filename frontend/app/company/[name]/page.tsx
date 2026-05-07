@@ -19,6 +19,7 @@ export default function CompanyPage() {
   const [data, setData] = useState<CompanyResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   useEffect(() => {
     async function loadData() {
@@ -35,6 +36,19 @@ export default function CompanyPage() {
       loadData();
     }
   }, [decodedName]);
+
+  const handleToggleSelect = (id: string) => {
+    setSelectedIds(prev => {
+      if (prev.includes(id)) {
+        return prev.filter(x => x !== id);
+      }
+      if (prev.length >= 2) {
+        alert("Deselect one first");
+        return prev;
+      }
+      return [...prev, id];
+    });
+  };
 
   if (loading) {
     return (
@@ -68,7 +82,7 @@ export default function CompanyPage() {
   const maxCount = sortedLevels.length > 0 ? sortedLevels[0][1] : 1;
 
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 font-sans">
+    <main className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 font-sans pb-32">
       <div className="max-w-7xl mx-auto space-y-8">
         <Link href="/" className="text-indigo-600 hover:text-indigo-800 font-medium inline-block mb-2">
           ← Back to all salaries
@@ -125,9 +139,40 @@ export default function CompanyPage() {
 
         <div className="pt-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">All Salaries</h2>
-          <SalaryTable salaries={data.salaries} loading={false} />
+          <SalaryTable 
+            salaries={data.salaries} 
+            loading={false} 
+            selectedIds={selectedIds}
+            onToggleSelect={handleToggleSelect}
+          />
         </div>
       </div>
+
+      {selectedIds.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 bg-gray-900 text-white p-4 shadow-lg z-50">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <span className="font-medium">{selectedIds.length} selected</span>
+              {selectedIds.length === 1 ? (
+                <span className="text-gray-400 text-sm">Select one more to compare</span>
+              ) : (
+                <Link 
+                  href={`/compare?id1=${selectedIds[0]}&id2=${selectedIds[1]}`}
+                  className="bg-indigo-500 hover:bg-indigo-400 text-white px-4 py-2 rounded-md font-medium transition-colors"
+                >
+                  Compare Now
+                </Link>
+              )}
+            </div>
+            <button 
+              onClick={() => setSelectedIds([])}
+              className="text-gray-400 hover:text-white text-sm"
+            >
+              Clear selection
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
